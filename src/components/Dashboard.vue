@@ -10,6 +10,7 @@
                     <div class="create-post">
                         <p>create a post</p>
                         <form @submit.prevent>
+                            <input type="file" @change="onFileSelected">
                             <textarea v-model.trim="post.content"></textarea>
                             <button @click="createPost" :disabled="post.content === ''" class="button">post</button>
                         </form>
@@ -74,7 +75,8 @@
                     postComments: 0
                 },
                 showCommentModal: false,
-                showPostModal: false
+                showPostModal: false,
+                selectedFile: null
             }
         },
         computed: {
@@ -121,20 +123,30 @@
             },
             createPost() {
 
-                fb.postsCollection.add({
-                    createdOn: new Date(),
-                    content: this.post.content,
-                    userId: this.currentUser.uid,
-                    userName: this.userProfile.name,
-                    comments: 0,
-                    likes: 0
-                }).then(ref => {
-                    this.post.content = ''
-                }).then(() => {
-                    this.closePostModal()
-                }).catch(err => {
-                    console.log(err)
-                })
+                fb.uploads.child(this.selectedFile.name).put(this.selectedFile)
+                    .then(() => {
+                        console.log('uploaded!')
+
+                    }).then(() => {
+                        fb.postsCollection.add({
+                            createdOn: new Date(),
+                            content: this.post.content,
+                            userId: this.currentUser.uid,
+                            photo: fb.uploads.child.
+                            userName: this.userProfile.name,
+                            comments: 0,
+                            likes: 0
+                        }).then(ref => {
+                            this.post.content = ''
+                        }).then(() => {
+                            this.closePostModal()
+                        }).catch(err => {
+                            console.log(err)
+                        })
+                    })
+            },
+            onFileSelected(event) {
+                this.selectedFile = event.target.files[0]
             }
         },
         filters: {
