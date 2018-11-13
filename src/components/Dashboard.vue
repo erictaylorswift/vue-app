@@ -37,6 +37,7 @@
         <section>
             <div v-if="posts.length" class="postsContainer">
                 <div v-for="post in posts" :key="post.id" class="post">
+                    <img :src="post.photo" style="width: 100%">
                     <h5>{{ post.userName }}</h5>
                     <span>{{ post.createdOn | formatDate }}</span>
                     <p>{{ post.content | trimLength }}</p>
@@ -76,11 +77,11 @@
                 },
                 showCommentModal: false,
                 showPostModal: false,
-                selectedFile: null
-            }
+                selectedFile: null,
+               }
         },
         computed: {
-            ...mapState(['userProfile', 'currentUser', 'posts'])
+            ...mapState(['userProfile', 'currentUser', 'posts', 'photos'])
         },
         methods: {
             openPostModal() {
@@ -88,6 +89,7 @@
             },
             closePostModal() {
                 this.showPostModal = false
+                this.photos = ''
             },
             openCommentModal(post) {
                 this.comment.postId = post.id
@@ -125,25 +127,29 @@
 
                 fb.uploads.child(this.selectedFile.name).put(this.selectedFile)
                     .then(() => {
-                        console.log('uploaded!')
-
+                        this.$store.commit('setFile', this.selectedFile.name)
+                        
                     }).then(() => {
-                        fb.postsCollection.add({
-                            createdOn: new Date(),
-                            content: this.post.content,
-                            userId: this.currentUser.uid,
-                            photo: fb.uploads.child.
-                            userName: this.userProfile.name,
-                            comments: 0,
-                            likes: 0
-                        }).then(ref => {
-                            this.post.content = ''
-                        }).then(() => {
-                            this.closePostModal()
-                        }).catch(err => {
-                            console.log(err)
-                        })
+                        this.$store.dispatch('fetchPhotoURL')
+                    }).catch(err => {
+                        console.log(err)
                     })
+
+                fb.postsCollection.add({
+                    createdOn: new Date(),
+                    content: this.post.content,
+                    userId: this.currentUser.uid,
+                    userName: this.userProfile.name,
+                    photo: this.photos,
+                    comments: 0,
+                    likes: 0
+                }).then(ref => {
+                    this.post.content = ''
+                }).then(() => {
+                    this.closePostModal()
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             onFileSelected(event) {
                 this.selectedFile = event.target.files[0]

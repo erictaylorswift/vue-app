@@ -28,7 +28,9 @@ export const store = new Vuex.Store({
     state: {
         currentUser: null,
         userProfile: {},
-        posts: []        
+        posts: [],
+        photos: null,
+        file: null    
     },
     actions: {
         clearData({ commit }) {
@@ -43,6 +45,14 @@ export const store = new Vuex.Store({
                 }).catch(err => {
                     console.log(err)
                 })
+        },
+        fetchPhotoURL({ commit, state }) {
+            fb.uploads.child(state.file).getDownloadURL()
+                .then((url) => {
+                    commit('setPhotos', url);
+                }).catch(err => {
+                    console.log(err)
+                })
         }
     }, 
     mutations: {
@@ -54,6 +64,12 @@ export const store = new Vuex.Store({
         },
         setPosts(state, val) {
             state.posts = val
+        },
+        setPhotos(state, val) {
+            state.photos = val
+        },
+        setFile(state, val) {
+            state.file = val
         }
     }
 })
