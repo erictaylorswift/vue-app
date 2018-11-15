@@ -1,16 +1,16 @@
 <template>
     <div id="app">
-        <Navigation v-if="currentUser"></Navigation>
+        <Menu v-if="currentUser"></Menu>
         <router-view/>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
-    import Navigation from './components/Navigation';
+    import Menu from './components/Menu';
     
     export default {
-        components: { Navigation },
+        components: { Menu },
         computed: {
             ...mapState(['currentUser'])
         }

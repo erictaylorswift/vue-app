@@ -1,6 +1,8 @@
 // imports
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+@import url('https://use.fontawesome.com/releases/v5.5.0/css/all.css');
+
 // colors
 $primary: #30A0EE;
 $error: #ef5777;
@@ -99,6 +101,11 @@ section {
 	@media screen and (max-width: 742px) {
 
 	}
+}
+
+.v-sidebar-menu .vsm-icon {
+	content: "\f105";
+	font-family: "Font Awesome 5 Free";
 }
 
 [v-cloak] {display: none}

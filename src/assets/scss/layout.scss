@@ -118,6 +118,9 @@ header {
     		flex: 0 0 40%;
     	}
     }
+    .post-info {
+        padding: 10px;
+    }
     .profile {
         background: $white;
         padding: 2rem;
@@ -131,8 +134,8 @@ header {
             margin-bottom: 0.5rem;
         }
         textarea {
-            height: 200px;
-            margin: 0;
+            height: 74px;
+            margin: 22px 0;
         }
         .button {
             margin-top: 1rem;
@@ -141,6 +144,7 @@ header {
             border-radius: 0 0 3px 3px;
         }
     }
+    
     .hidden-posts {
         text-align: center;
         border: 1px solid #e6ecf0;
@@ -171,7 +175,7 @@ header {
     }
     .post {
         font-size: 14px;
-        padding: 1.5rem;
+        // padding: 1.5rem;
         background: $white;
         height: auto;
         width: 300px;
@@ -180,10 +184,6 @@ header {
         -webkit-box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.3);
         -moz-box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.3);
         box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.3);
-
-        &:hover {
-            background: #f5f8fa;
-        }
 
         &:last-of-type {
             border-bottom: 1px solid $light;
@@ -196,16 +196,20 @@ header {
             display: block;
             font-style: italic;
             font-size: 12px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0;
             color: darken($light, 25%);
+            float: left;
+            
         }
         p {
             margin: 0;
+            padding: 4px 16px
         }
         ul {
             list-style: none;
-            margin: 1rem 0 0;
+            margin:  0;
             padding: 0;
+            text-align: right;
 
             li {
                 display: inline-block;
@@ -216,13 +220,16 @@ header {
     }
     .createPostButton {
         position: fixed;
-        bottom: 0;
+        bottom: 44px;
         background: blueviolet;
+        text-align: center;
         color: white;
         font-size: 22px;
-        width: 100%;
-        padding: 16px;
-        text-align: center;
+        height: auto;
+        padding: 22px;
+        right: 44px;
+        border-radius: 22px;
+        box-shadow: 0 0 5px 0 rgba($dark, 0.5);
     }
     .postsContainer {
         display: flex;
@@ -230,7 +237,6 @@ header {
         padding: 0;
         justify-content: space-around;
         margin: 0;
-
 
     }
     .no-results {
@@ -251,7 +257,7 @@ header {
         .c-container {
             position: relative;
             max-width: 600px;
-            margin: 30vh auto 0;
+            margin: 10vh auto 0;
             padding: 2rem;
             border-radius: 3px;
             background: $white;
@@ -265,6 +271,10 @@ header {
             }
             .button {
                 margin-top: 1rem;
+            }
+            h5 {
+                text-align: center;
+                margin-bottom: 36px;
             }
         }
     }

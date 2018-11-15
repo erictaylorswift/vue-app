@@ -5,16 +5,36 @@
             <div v-if="showPostModal" class="c-modal">
                 <div class="c-container">
                     <a @click="closePostModal">X</a>
-                    <h5>{{ userProfile.name }}</h5>
-                    <p>{{ userProfile.title }}</p>
+                    <h5>Post your art</h5>
                     <div class="create-post">
-                        <p>create a post</p>
                         <form @submit.prevent>
-                            <input type="file" @change="onFileSelected">
-                            <textarea v-model.trim="post.content"></textarea>
+                            <picture-input
+                                ref="pictureInput"
+                                @change="onFileSelected"
+                                @remove="onRemove"
+                                :width="300"
+                                :height="300"
+                                accept="image/jpeg, image/png, image/gif"
+                                buttonClass="button"
+                                :customStrings="{
+                                    upload: '<h1>Upload your art</h1>',
+                                    drag: 'Upload a 1:1 image of your art'
+                                }"></picture-input>
+                            <textarea v-model.trim="post.content" placeholder="describe your art here"></textarea>
                             <button @click="createPost" :disabled="post.content === ''" class="button">post</button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </transition>
+
+        <!-- error modal -->
+        <transition name="fade">
+            <div v-if="showError" class="c-modal">
+                <div class="c-container">
+                    <a @click="closeErrorModal">X</a>
+                    <h5>Error</h5>
+                    <p>Please upload a photo</p>
                 </div>
             </div>
         </transition>
@@ -36,19 +56,21 @@
         <a @click="openPostModal" class="createPostButton">Create Post</a>
         <section>
             <div v-if="posts.length" class="postsContainer">
-                <div v-for="post in posts" :key="post.id" class="post">
-                    <img :src="post.photo" style="width: 100%">
-                    <h5>{{ post.userName }}</h5>
-                    <span>{{ post.createdOn | formatDate }}</span>
-                    <p>{{ post.content | trimLength }}</p>
-                    <ul>
-                        <li>comments: {{ post.comments }}</li>
-                        <li>like: {{ post.likes }}</li>
-                    </ul>
-                    <ul>
-                        <li><a @click="openCommentModal(post)">Comment</a></li>
-                        <li><a>Full post</a></li>
-                    </ul>
+                <div v-for="post in posts" :key="post.id" class="post" v-if="post.userId === currentUser.uid" >
+                    <div>
+                        <img :src="post.photo" style="width: 100%" >
+                    </div>
+                        
+                    
+                    <!-- <p>{{ post.content }}</p> -->
+                    <div class="post-info">
+                        <span>{{ post.createdOn | formatDate }}</span>
+                        
+                        <ul>
+                            <li>comments: {{ post.comments }}</li>
+                            <li>like: {{ post.likes }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div v-else>
@@ -61,13 +83,16 @@
 <script>
     import { mapState } from 'vuex';
     import moment from 'moment';
+    import PictureInput from 'vue-picture-input';
     const fb = require('../firebaseConfig');
 
     export default {
         data() {
             return {
                 post: {
-                    content: ''
+                    content: '',
+                    photoURL: '',
+                    file: ''
                 },
                 comment: {
                     postId: '',
@@ -78,10 +103,12 @@
                 showCommentModal: false,
                 showPostModal: false,
                 selectedFile: null,
+                showError: false,
                }
         },
+        components: { PictureInput },
         computed: {
-            ...mapState(['userProfile', 'currentUser', 'posts', 'photos'])
+            ...mapState(['userProfile', 'currentUser', 'posts'])
         },
         methods: {
             openPostModal() {
@@ -89,7 +116,9 @@
             },
             closePostModal() {
                 this.showPostModal = false
-                this.photos = ''
+            },
+            closeErrorModal() {
+                this.showError = false
             },
             openCommentModal(post) {
                 this.comment.postId = post.id
@@ -124,35 +153,41 @@
                 })
             },
             createPost() {
-
                 fb.uploads.child(this.selectedFile.name).put(this.selectedFile)
                     .then(() => {
-                        this.$store.commit('setFile', this.selectedFile.name)
-                        
+                        return this.post.file = this.selectedFile.name
                     }).then(() => {
-                        this.$store.dispatch('fetchPhotoURL')
-                    }).catch(err => {
-                        console.log(err)
-                    })
+                        fb.uploads.child(this.selectedFile.name).getDownloadURL()
+                            .then((url) => {
+                                return this.post.photoURL = url
+                            }).then(() => {
+                                fb.postsCollection.add({
+                                    createdOn: new Date(),
+                                    content: this.post.content,
+                                    userId: this.currentUser.uid,
+                                    userName: this.userProfile.name,
+                                    photo: this.post.photoURL,
+                                    comments: 0,
+                                    likes: 0
+                                }).then(ref => {
+                                    this.post.content = ''
+                                }).then(() => {
+                                    this.closePostModal()
+                                }).catch(err => {
+                                    console.log(err)
+                                })
+                            })
+                        }).catch(err => {
+                            console.log(err)
+                            this.showError = true
+                        })
 
-                fb.postsCollection.add({
-                    createdOn: new Date(),
-                    content: this.post.content,
-                    userId: this.currentUser.uid,
-                    userName: this.userProfile.name,
-                    photo: this.photos,
-                    comments: 0,
-                    likes: 0
-                }).then(ref => {
-                    this.post.content = ''
-                }).then(() => {
-                    this.closePostModal()
-                }).catch(err => {
-                    console.log(err)
-                })
             },
-            onFileSelected(event) {
-                this.selectedFile = event.target.files[0]
+            onRemove() {
+                this.selectedFile = null
+            },
+            onFileSelected() {
+                this.selectedFile = this.$refs.pictureInput.file;
             }
         },
         filters: {
