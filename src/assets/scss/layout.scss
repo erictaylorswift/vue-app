@@ -1,17 +1,20 @@
 // navigation
 header {
-    position: relative;
+    position: fixed;
     background: $white;
     box-shadow: 0 0 5px 0 rgba($dark, 0.5);
     z-index: 10;
+    width: 100%;
+    display: inline-block;
 
     h3 {
         display: inline-block;
     }
 
     ul {
-        float: right;
-        text-align: right;
+        // float: right;
+        text-align: left;
+        display: inline;
 
         li {
             margin-top: 4px;
@@ -21,6 +24,10 @@ header {
                 padding: 5px;
             }
         }
+    }
+
+    section {
+        max-width: 100%;
     }
 
     @media screen and (max-width: 742px) {
@@ -109,7 +116,7 @@ header {
 // dashboard
 #dashboard {
     section {
-        padding: 2rem 0;
+        padding: 6rem 0;
     }
 
     .col1 {

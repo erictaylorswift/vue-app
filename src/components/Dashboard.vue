@@ -8,20 +8,18 @@
                     <h5>Post your art</h5>
                     <div class="create-post">
                         <form @submit.prevent>
-                            <picture-input
-                                ref="pictureInput"
-                                @change="onFileSelected"
-                                @remove="onRemove"
+                            <croppa 
+                                v-model="myCroppa"
                                 :width="300"
                                 :height="300"
-                                accept="image/jpeg, image/png, image/gif"
-                                buttonClass="button"
-                                :customStrings="{
-                                    upload: '<h1>Upload your art</h1>',
-                                    drag: 'Upload a 1:1 image of your art'
-                                }"></picture-input>
-                            <textarea v-model.trim="post.content" placeholder="describe your art here"></textarea>
-                            <button @click="createPost" :disabled="post.content === ''" class="button">post</button>
+                                :placeholder="'Upload your art'"
+                                :accept="'image/*'"
+                                :disable-drag-and-drop="false"
+                                @image-remove="onRemove"
+                                @new-image="onFileSelected"></croppa>
+                            <textarea v-if="fileGenerated" v-model.trim="post.content" placeholder="describe your art here"></textarea>
+                            <button v-if="fileGenerated" @click="createPost" :disabled="post.content === ''" class="button">post</button>
+                            <button v-else @click="uploadCroppedImage" class="button">Crop Image</button>
                         </form>
                     </div>
                 </div>
@@ -83,7 +81,6 @@
 <script>
     import { mapState } from 'vuex';
     import moment from 'moment';
-    import PictureInput from 'vue-picture-input';
     const fb = require('../firebaseConfig');
 
     export default {
@@ -100,13 +97,14 @@
                     content: '',
                     postComments: 0
                 },
+                myCroppa: {},
                 showCommentModal: false,
                 showPostModal: false,
                 selectedFile: null,
                 showError: false,
+                fileGenerated: false
                }
         },
-        components: { PictureInput },
         computed: {
             ...mapState(['userProfile', 'currentUser', 'posts'])
         },
@@ -153,42 +151,40 @@
                 })
             },
             createPost() {
-                fb.uploads.child(this.selectedFile.name).put(this.selectedFile)
-                    .then(() => {
-                        return this.post.file = this.selectedFile.name
+                fb.uploads.child(this.selectedFile).getDownloadURL()
+                    .then((url) => {
+                        return this.post.photoURL = url
                     }).then(() => {
-                        fb.uploads.child(this.selectedFile.name).getDownloadURL()
-                            .then((url) => {
-                                return this.post.photoURL = url
-                            }).then(() => {
-                                fb.postsCollection.add({
-                                    createdOn: new Date(),
-                                    content: this.post.content,
-                                    userId: this.currentUser.uid,
-                                    userName: this.userProfile.name,
-                                    photo: this.post.photoURL,
-                                    comments: 0,
-                                    likes: 0
-                                }).then(ref => {
-                                    this.post.content = ''
-                                }).then(() => {
-                                    this.closePostModal()
-                                }).catch(err => {
-                                    console.log(err)
-                                })
-                            })
+                        fb.postsCollection.add({
+                            createdOn: new Date(),
+                            content: this.post.content,
+                            userId: this.currentUser.uid,
+                            userName: this.userProfile.name,
+                            photo: this.post.photoURL,
+                            comments: 0,
+                            likes: 0
+                        }).then(ref => {
+                            this.post.content = ''
+                            this.fileGenerated = false
+                        }).then(() => {
+                            this.closePostModal()
                         }).catch(err => {
                             console.log(err)
-                            this.showError = true
                         })
-
+                    })
             },
             onRemove() {
                 this.selectedFile = null
+                this.fileGenerated = false
             },
             onFileSelected() {
-                this.selectedFile = this.$refs.pictureInput.file;
-            }
+                this.selectedFile = this.myCroppa.chosenFile.name
+            },
+            uploadCroppedImage() {
+                this.myCroppa.generateBlob(blob => {
+                    fb.uploads.child(this.selectedFile).put(blob)
+                    this.fileGenerated = true
+            })}
         },
         filters: {
             formatDate(val) {
