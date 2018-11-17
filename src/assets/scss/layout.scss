@@ -227,16 +227,17 @@ header {
     }
     .createPostButton {
         position: fixed;
-        bottom: 44px;
-        background: blueviolet;
+        top: 26px;
+        // background: blueviolet;
         text-align: center;
-        color: white;
-        font-size: 22px;
+        color: #30A0EE;
+        font-size: 16px;
+        z-index: 1000;
         height: auto;
-        padding: 22px;
+        // padding: 22px;
         right: 44px;
-        border-radius: 22px;
-        box-shadow: 0 0 5px 0 rgba($dark, 0.5);
+        // border-radius: 22px;
+        // box-shadow: 0 0 5px 0 rgba($dark, 0.5);
     }
     .postsContainer {
         display: flex;

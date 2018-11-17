@@ -6,7 +6,7 @@ import './assets/scss/app.scss'
 import VModal from 'vue-js-modal'
 import Croppa from 'vue-croppa'
 import 'vue-croppa/dist/vue-croppa.css'
-import VueSidebarMenu from 'vue-sidebar-menu'
+import VTooltip from 'v-tooltip'
 
 const fb = require('./firebaseConfig')
 
@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 
 Vue.use(VModal)
 Vue.use(Croppa)
-Vue.use(VueSidebarMenu)
+Vue.use(VTooltip)
 
 let app
 fb.auth.onAuthStateChanged(user => {
