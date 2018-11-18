@@ -30,11 +30,20 @@
                 <form v-if="!showLoginForm && !showForgotPassword" @submit.prevent>
                     <h1>Get Started</h1>
 
+                    <croppa 
+                        v-model="myCroppa"
+                        :width="150"
+                        :height="150"
+                        :placeholder="'Choose a profile image'"
+                        :accept="'image/*'"
+                        :disable-drag-and-drop="false"
+                        @image-remove="onRemove"
+                        @new-image="onAvatarSelected">
+                    </croppa>
+                    <button @click="uploadCroppedImage" class="button">Crop Image</button>
+
                     <label for='name'>Name</label>
                     <input v-model.trim="signupForm.name" type="text" placeholder="Name" id="name">
-
-                    <label for ='title'>Title</label>
-                    <input v-model.trim="signupForm.title" type="text" placeholder="Company" id='title'>
 
                     <label for="email2">Email</label>
                     <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2">
@@ -93,7 +102,8 @@
                     name: '',
                     title: '',
                     email: '',
-                    password: ''
+                    password: '',
+                    avatar: ''
                 },
                 passwordForm: {
                     email: ''
@@ -102,7 +112,9 @@
                 showForgotPassword: false,
                 passwordResetSuccess: false,
                 performingRequest: false,
-                errorMsg: ''
+                errorMsg: '',
+                avatarSelected: null,
+                avatarGenerated: false,
             }
         },
         methods: {
@@ -140,7 +152,8 @@
                         fb.usersCollection.doc(this.$store.state.currentUser.user.uid).set({
                             name: this.signupForm.name,
                             title: this.signupForm.title,
-                            email: this.signupForm.email
+                            email: this.signupForm.email,
+                            avatar: this.signupForm.avatar
                         }).then(() => {
                             this.$store.dispatch('fetchUserProfile')
                             this.performingRequest = false
@@ -165,6 +178,20 @@
                     console.log(err)
                     this.performingRequest = false
                     this.errorMsg = err.message
+                })
+            },
+            onAvatarSelected() {
+                this.avatarSelected = this.myCroppa.chosenFile.name
+            },
+            uploadCroppedImage() {
+                this.myCroppa.generateBlob(blob => {
+                    fb.uploads.child(this.avatarSelected).put(blob)
+                    this.fileGenerated = true
+                }).then(() => {
+                    fb.uploads.child(this.avatarSelected).getDownloadURL()
+                        .then((url) => {
+                            return this.signupForm.avatar = url
+                        })
                 })
             }
         }

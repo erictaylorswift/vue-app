@@ -84,17 +84,11 @@ a {
 // globals
 section {
 	display: flex;
-	max-width: 1200px;
 	margin: 0 auto;
 
 	@media screen and (max-width: 742px) {
 		display: block;
 	}
-}
-.croppa-container {
-	max-width: 300px;
-	margin: 0 auto;
-	display: block !important;
 }
 
 .slideout-menu {
