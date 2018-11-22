@@ -51,7 +51,7 @@
             </div>
         </transition>
 
-        <a @click="openPostModal" class="createPostButton">Create Post</a>
+        <!-- <a @click="openPostModal" class="createPostButton">Create Post</a> -->
         <section>
             <div v-if="posts.length" class="postsContainer">
                 <div v-for="post in posts" :key="post.id" class="post" v-if="post.userId === currentUser.uid" >
@@ -99,21 +99,19 @@
                 },
                 myCroppa: {},
                 showCommentModal: false,
-                showPostModal: false,
+                // showPostModal: false,
                 selectedFile: null,
                 showError: false,
                 fileGenerated: false
                }
         },
         computed: {
-            ...mapState(['userProfile', 'currentUser', 'posts'])
+            ...mapState(['userProfile', 'currentUser', 'posts', 'showPostModal'])
         },
         methods: {
-            openPostModal() {
-                this.showPostModal = true
-            },
+            
             closePostModal() {
-                this.showPostModal = false
+                this.$store.dispatch('closePostModal')
             },
             closeErrorModal() {
                 this.showError = false
