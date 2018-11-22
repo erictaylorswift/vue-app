@@ -1,5 +1,5 @@
 <template>
-    <sidebar-menu :menu="menu" :collapsed="collapsed" @collapse="onCollapse"/>
+    <sidebar-menu :menu="menu"/>
 </template>
 
 <script>
@@ -7,24 +7,17 @@ export default {
     data() {
         return {
             menu: [
-                {
-                    href: '/dashboard',
-                    title: 'My Art',
-                    icon: 'fa fa-user'
-                },
-                {
-                    href: '/settings',
-                    title: 'Settings',
-                    icon: 'fas fa-cogs'
-                }
-            ],
-            collapsed: false
-        }
-    },
-    methods: {
-        onCollapse(val) {
-            console.log(`collapse ${val}`)
-            this.collapsed = val
+            {
+                href: '/dashboard',
+                title: 'My Art',
+                icon: 'fa fa-paint-brush'
+            },
+            {
+                href: 'logout',
+                title: 'Logout',
+                icon: 'fa fa-sign-out-alt'
+            }
+        ]
         }
     }
 }

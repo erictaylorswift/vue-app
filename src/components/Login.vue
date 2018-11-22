@@ -1,54 +1,84 @@
 <template>
-    <div class="login">
+    <div id="login">
         <transition name="fade">
             <div v-if="performingRequest" class="loading">
                 <p>Loading...</p>
             </div>
         </transition>
+        
+        <transition name="fade">
+            <div v-if="showAvatarModal" class="c-modal">
+                <div class="c-container">
+                    <a @click="closeAvatarModal">X</a>
+                    <h5>Upload your profile picture</h5>
+                    <p v-if="this.avatarSelected === null" class="avatarPlaceholder">Drag and drop your profile picture</p>
+                    <croppa 
+                        v-model="myCroppa"
+                        :placeholder="''"
+                        :accept="'image/*'"
+                        :disable-drag-and-drop="false"
+                        @image-remove="handleImageRemove"
+                        @new-image="onAvatarSelected"></croppa>
+                    <div class="button-container">
+                        <button 
+                            @click="uploadCroppedImage" 
+                            :disabled="this.avatarSelected === null"
+                            class="button">
+                            Crop Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </transition>
+
         <section>
             <div class="col1">
                 <h1>Vuegram</h1>
             </div>
-            <div class="col2" :class="{ 'signup-form': !showLoginForm && !showForgotPassword }">
-                <form v-if="showLoginForm" @submit.prevent >
-                    <h1>Welcome Back</h1>
+            <div class="col2" >
+                    <form v-if="showLoginForm" @submit.prevent >
+                        <h1>Welcome Back</h1>
 
-                    <label for="email1">Email</label>
-                    <input v-model.trim="loginForm.email" type="text" placeholder="you@email.com" id="email1" >
+                        <label for="email1">Email</label>
+                        <input v-model.trim="loginForm.email" type="text" placeholder="you@email.com" id="email1" >
 
-                    <label for="password1">Password</label>
-                    <input v-model.trim="loginForm.password" type="password" placeholder="******" id="password1" >
+                        <label for="password1">Password</label>
+                        <input v-model.trim="loginForm.password" type="password" placeholder="******" id="password1" >
 
-                    <button @click="login" class="button">Log In</button>
+                        <button @click="login" class="button">Log In</button>
 
-                    <div class="extras">
-                        <a @click="toggleForm">Create an Account</a>
-                        <a @click="toggleForgotPasswordReset">Forgot Password</a>
-                    </div>
+                        <div class="extras">
+                            <a @click="toggleForm">Create an Account</a>
+                            <a @click="toggleForgotPasswordReset">Forgot Password</a>
+                        </div>
 
-                </form>
-                <form v-if="!showLoginForm && !showForgotPassword" @submit.prevent>
-                    <h1>Get Started</h1>
+                    </form>
+                    <form v-if="!showLoginForm && !showForgotPassword" @submit.prevent>
+                        <h1>Get Started</h1>
+                            <div class="avatarDefault">
+                                <a @click="uploadAvatar">
+                                    <img v-if="!avatarGenerated" src="https://firebasestorage.googleapis.com/v0/b/my-vue-app-1b7cc.appspot.com/o/default_avatar.png?alt=media&token=50db3258-a5ff-4514-8fd5-65cf27df6fb8" alt="default_avatar">
+                                    <img v-else :src="this.avatarURL" alt="">
+                                </a>
+                            </div>
 
-                    <label for='name'>Name</label>
-                    <input v-model.trim="signupForm.name" type="text" placeholder="Name" id="name">
+                        <label for='name'>Name</label>
+                        <input v-model.trim="signupForm.name" type="text" placeholder="Name" id="name">
 
-                    <label for ='title'>Title</label>
-                    <input v-model.trim="signupForm.title" type="text" placeholder="Company" id='title'>
+                        <label for="email2">Email</label>
+                        <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2">
 
-                    <label for="email2">Email</label>
-                    <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2">
+                        <label for="password2">Password</label>
+                        <input v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2">
 
-                    <label for="password2">Password</label>
-                    <input v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2">
+                        <button @click="signup" class="button">Sign Up</button>
 
-                    <button @click="signup" class="button">Sign Up</button>
+                        <div class="extras">
+                            <a @click="toggleForm">Back to Log In</a> 
+                        </div>
 
-                    <div class="extras">
-                        <a @click="toggleForm">Back to Log In</a>
-                    </div>
-
-                </form>
+                    </form>
                 <form v-if="showForgotPassword" @submit.prevent class="password-reset">
                     <div v-if="!passwordResetSuccess">
                         <h1>Reset Password</h1>
@@ -91,24 +121,30 @@
                 },
                 signupForm: {
                     name: '',
-                    title: '',
                     email: '',
-                    password: ''
                 },
+                avatarURL: '',
                 passwordForm: {
                     email: ''
                 },
+                myCroppa: {},
                 showLoginForm: true,
                 showForgotPassword: false,
                 passwordResetSuccess: false,
                 performingRequest: false,
-                errorMsg: ''
+                errorMsg: '',
+                avatarSelected: null,
+                avatarGenerated: false,
+                showAvatarModal: false
             }
         },
         methods: {
             toggleForm() {
                 this.errorMsg = ''
                 this.showLoginForm = !this.showLoginForm
+            },
+            closeAvatarModal() {
+                this.showAvatarModal = false;
             },
             toggleForgotPasswordReset() {
                 this.errorMsg = ''
@@ -139,8 +175,8 @@
 
                         fb.usersCollection.doc(this.$store.state.currentUser.user.uid).set({
                             name: this.signupForm.name,
-                            title: this.signupForm.title,
-                            email: this.signupForm.email
+                            email: this.signupForm.email,
+                            avatar: this.avatarURL
                         }).then(() => {
                             this.$store.dispatch('fetchUserProfile')
                             this.performingRequest = false
@@ -166,6 +202,27 @@
                     this.performingRequest = false
                     this.errorMsg = err.message
                 })
+            },
+            onAvatarSelected() {
+                this.avatarSelected = this.myCroppa.chosenFile.name
+            },
+            uploadAvatar() {
+                this.showAvatarModal = true
+            },
+            uploadCroppedImage() {
+                this.myCroppa.generateBlob(blob => {
+                    fb.uploads.child(this.avatarSelected).put(blob)
+                    this.avatarGenerated = true
+
+                fb.uploads.child(this.avatarSelected).getDownloadURL()
+                    .then((url) => {
+                        return this.avatarURL = url;
+                    })
+                this.showAvatarModal = false
+                })
+            },
+            handleImageRemove() {
+                this.avatarSelected = null;
             }
         }
 

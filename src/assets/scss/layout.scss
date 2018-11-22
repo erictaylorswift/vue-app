@@ -1,26 +1,33 @@
 // navigation
 header {
-    position: relative;
+    position: fixed;
     background: $white;
     box-shadow: 0 0 5px 0 rgba($dark, 0.5);
     z-index: 10;
+    width: 100%;
+    display: inline-block;
 
     h3 {
         display: inline-block;
     }
 
     ul {
-        float: right;
-        text-align: right;
+        text-align: left;
+        display: inline;
 
         li {
             margin-top: 4px;
             margin-left: 6px;
+            display: inline-block;
             a {
-                display: block;
+                display: inline-block;
                 padding: 5px;
             }
         }
+    }
+
+    section {
+        max-width: 100%;
     }
 
     @media screen and (max-width: 742px) {
@@ -37,17 +44,78 @@ header {
 
 // login
 #login {
-    background: linear-gradient(to right, $primary 0%, $primary 50%, $white 50%, $white 100%);
-
     @media screen and (max-width: 742px) {
         height: 100vh;
         background: $white;
     }
 
+    .croppa-container {
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        display: block !important;
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
+
+    .c-modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba($dark, 0.4);
+        z-index: 999;
+
+        .c-container {
+            position: relative;
+            max-width: 600px;
+            margin: 10vh auto 0;
+            padding: 2rem;
+            border-radius: 3px;
+            background: $white;
+            box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+
+            .button-container {
+                margin-top: 22px;
+            }
+
+            .avatarPlaceholder {
+                position: absolute;
+                z-index: 10;
+                text-align: center;
+                top: 50%;
+                right: 30%;
+
+                @media screen and (max-width: 400px) {
+                    right: 20%;
+                }
+            }
+
+            a {
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                padding: 5px;
+            }
+            .button {
+                margin: 0 auto;
+                display: block;
+            }
+            h5 {
+                text-align: center;
+                margin-bottom: 36px;
+            }
+        }
+    }
+
     .col1,
     .col2 {
         height: 100vh;
-        padding-top: 30vh;
+        padding-top: 15vh;
 
         @media screen and (max-width: 742px) {
             height: auto;
@@ -56,6 +124,8 @@ header {
     }
     .col1 {
         color: $white;
+        background-color: pink;
+        max-width: 30%;
         @media screen and (max-width: 742px) {
             display: none;
         }
@@ -85,6 +155,7 @@ header {
         form {
             max-width: 450px;
             margin: 0 auto;
+            height: 100%;
         }
         .extras {
             float: right;
@@ -109,7 +180,7 @@ header {
 // dashboard
 #dashboard {
     section {
-        padding: 2rem 0;
+        padding: 6rem;
     }
 
     .col1 {
@@ -142,6 +213,11 @@ header {
             width: 100%;
             z-index: 5;
             border-radius: 0 0 3px 3px;
+        }
+        .croppa-container {
+            max-width: 300px;
+            margin: 0 auto;
+            display: block !important;
         }
     }
     
@@ -218,24 +294,12 @@ header {
             }
         }
     }
-    .createPostButton {
-        position: fixed;
-        bottom: 44px;
-        background: blueviolet;
-        text-align: center;
-        color: white;
-        font-size: 22px;
-        height: auto;
-        padding: 22px;
-        right: 44px;
-        border-radius: 22px;
-        box-shadow: 0 0 5px 0 rgba($dark, 0.5);
-    }
+
     .postsContainer {
         display: flex;
         flex-flow: row wrap;
         padding: 0;
-        justify-content: space-around;
+        justify-content: flex-start;
         margin: 0;
 
     }

@@ -30,13 +30,20 @@ export const store = new Vuex.Store({
         userProfile: {},
         posts: [],
         photos: null,
-        file: null    
+        file: null,
+        showPostModal: false    
     },
     actions: {
         clearData({ commit }) {
             commit('setCurrentUser', null)
             commit('setUserProfile', {})
             commit('setPosts', null)
+        },
+        postModal({ commit }) {
+            commit('setPostModal', true)
+        },
+        closePostModal({ commit }) {
+            commit('setPostModal', false)
         },
         fetchUserProfile({ commit, state }) {
             fb.usersCollection.doc(state.currentUser.uid).get()
@@ -70,6 +77,9 @@ export const store = new Vuex.Store({
         },
         setFile(state, val) {
             state.file = val
+        },
+        setPostModal(state, val) {
+            state.showPostModal = val
         }
     }
 })
