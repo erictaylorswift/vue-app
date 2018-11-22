@@ -91,6 +91,23 @@ section {
 	}
 }
 
+.avatarDefault {
+	width: 94px;
+	height: 94px;
+	border-radius: 100%;
+	background: black;
+	margin: 0 auto;
+	text-align: center;
+
+	img {
+		width: 100%;
+		border-radius: 100%;
+
+		&:hover {
+			opacity: 0.3;
+		}
+	}
+}
 .slideout-menu {
     position: fixed;
     top: 0;
@@ -201,18 +218,36 @@ section {
 	text-align: center;
 }
 
-.navRow {
-	display: inline;
-}
-
 .inline {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	display: inline-block;
 
 	li {
 		display: inline-block;
 	}
+}
+
+.right {
+	float: right;
+
+	li {
+		color: grey;
+
+		a {
+			color: grey;
+			font-size: 18px;
+		}
+	}
+}
+
+.avatarThumbnail {
+	float: right;
+	max-width: 32px;
+	border: solid grey;
+	border-radius: 100%;
+	margin-left: 16px;
 }
 .tooltip {
 	z-index: 10000 !important;
@@ -237,6 +272,13 @@ section {
 		a {
 			font-size: 24px;
 			color: darkgrey;
+		}
+
+		img {
+			max-width: 44px;
+			display: inline-block;
+			border-radius: 100%;
+			border: solid pink;
 		}
 	}
 }
@@ -289,4 +331,21 @@ form {
 .fade-leave-to {
 	opacity: 0;
 }
+
+.bounce-enter, .bounce-leave-to {
+	opacity: 0;
+}
+
+.bounce-leave, .bounce-enter-to {
+	opacity: 1;
+}
+
+.bounce-enter-active {
+	transition: opacity .5s ease-out
+}
+
+.bounce-leave-active {
+	transition: opacity .5s ease-in
+}
+	
 

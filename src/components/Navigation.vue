@@ -2,16 +2,15 @@
     <header>
         <section>
             <div class="col1">
-                <router-link to="dashboard">
-                    <h3>Vuegram</h3>
-                </router-link>
-                <div class="navRow">
+                    <router-link to='dashboard'><h3>Critiq</h3></router-link>
                     <ul class="inline">
+                        
                         <li><router-link to="dashboard">Dashboard</router-link></li>
                         <li><router-link to="settings">Settings</router-link></li>
-                        <li><router-link :to="user/this.userProfile.name">{{this.userProfile.name}}</router-link></li>
+                        <li><a @click="goToUser()">{{ this.userProfile.name }}</a></li>
                     </ul>
-                    <ul class="inlineRight">
+                    <img class="avatarThumbnail" :src="this.userProfile.avatar" alt="">
+                    <ul class="inline right">
                         <li v-if="['Dashboard'].indexOf($route.name) > -1">
                                 <a @click="openPostModal" v-tooltip.bottom="{ content: 'Upload your art', offset: 12 }">
                                     <i class="fas fa-cloud-upload-alt"></i>
@@ -23,7 +22,6 @@
                             </a>
                         </li>
                     </ul>
-                </div>
             </div>
         </section>
     </header>
@@ -63,6 +61,11 @@
             },
             hideTooltip() {
                 this.active = false
+            },
+            goToUser() {
+                const userName = this.userProfile.name;
+
+                this.$router.replace({name:'user', params:{Name: userName}})
             }
         }    
     }

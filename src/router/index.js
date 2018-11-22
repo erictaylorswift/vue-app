@@ -5,7 +5,8 @@ import firebase from 'firebase'
 import Login from '@/components/Login'
 import Dashboard from '@/components/Dashboard'
 import Settings from '@/components/Settings'
-import Menu from '@/components/Menu'
+import User from '@/components/User'
+
 
 Vue.use(Router)
 
@@ -22,7 +23,7 @@ const router = new Router({
 			component: Login
 		},
         {
-			path: '/dashboard',
+			path: '/dashboard/',
 			name: 'Dashboard',
 			component: Dashboard,
             meta: {
@@ -38,12 +39,9 @@ const router = new Router({
             }
 		},
 		{
-			path: '/user/:id',
-			name: 'User',
-			component: Dashboard,
-			meta: {
-				requiresAuth: true
-			}
+			path: '/user/:Name',
+			name: 'user',
+			component: User
 		}
 	]
 })
