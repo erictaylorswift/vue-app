@@ -176,7 +176,7 @@
                         fb.usersCollection.doc(this.$store.state.currentUser.user.uid).set({
                             name: this.signupForm.name,
                             email: this.signupForm.email,
-                            avatar: this.avatarURL
+                            avatar: this.avatarURL || 'https://firebasestorage.googleapis.com/v0/b/my-vue-app-1b7cc.appspot.com/o/default_avatar.png?alt=media&token=50db3258-a5ff-4514-8fd5-65cf27df6fb8'
                         }).then(() => {
                             this.$store.dispatch('fetchUserProfile')
                             this.performingRequest = false

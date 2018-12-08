@@ -1,0 +1,135 @@
+// login
+#login {
+    @media screen and (max-width: 742px) {
+        height: 100vh;
+        background: $white;
+    }
+
+    .croppa-container {
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        display: block !important;
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
+
+    .c-modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba($dark, 0.4);
+        z-index: 999;
+
+        .c-container {
+            position: relative;
+            max-width: 600px;
+            margin: 10vh auto 0;
+            padding: 2rem;
+            border-radius: 3px;
+            background: $light;
+            box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+
+            .button-container {
+                margin-top: 22px;
+            }
+
+            .avatarPlaceholder {
+                position: absolute;
+                z-index: 10;
+                text-align: center;
+                top: 50%;
+                right: 30%;
+
+                @media screen and (max-width: 400px) {
+                    right: 20%;
+                }
+            }
+
+            a {
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                padding: 5px;
+            }
+            .button {
+                margin: 0 auto;
+                display: block;
+            }
+            h5 {
+                text-align: center;
+                margin-bottom: 36px;
+            }
+        }
+    }
+
+    .col1,
+    .col2 {
+        height: 100vh;
+        padding-top: 15vh;
+
+        @media screen and (max-width: 742px) {
+            height: auto;
+            padding-top: 20vh;
+        }
+    }
+    .col1 {
+        color: $white;
+        background-color: pink;
+        max-width: 30%;
+        @media screen and (max-width: 742px) {
+            display: none;
+        }
+
+        p {
+            max-width: 490px;
+            margin-top: 2rem;
+            line-height: 1.8;
+        }
+
+        a {
+            color: $white;
+            text-decoration: underline;
+        }
+    }
+    .signup-form {
+        padding-top: 20vh;
+
+        @media screen and (max-width: 742px) {
+            padding-top: 10vh;
+        }
+    }
+    .col2 {
+        h1 {
+            margin-bottom: 2rem;
+        }
+        form {
+            max-width: 450px;
+            margin: 0 auto;
+            height: 100%;
+        }
+        .extras {
+            float: right;
+            text-align: right;
+            a {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .password-reset {
+            h1 {
+                margin-bottom: 1rem;
+            }
+            p {
+                margin-bottom: 2rem;
+            }
+        }
+    }
+}
+

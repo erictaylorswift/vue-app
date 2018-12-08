@@ -1,0 +1,20 @@
+.create-post {
+    p {
+        margin-bottom: 0.5rem;
+    }
+    textarea {
+        height: 74px;
+        margin: 22px 0;
+    }
+    .button {
+        margin-top: 1rem;
+        width: 100%;
+        z-index: 5;
+        border-radius: 0 0 3px 3px;
+    }
+    .croppa-container {
+        max-width: 300px;
+        margin: 0 auto;
+        display: block !important;
+    }
+}

@@ -1,0 +1,71 @@
+// dashboard
+#dashboard {
+    section {
+        padding: 6rem;
+    }
+
+    .col1 {
+        flex: 0 0 30%;
+        @media screen and (max-width: 1000px) {
+    		flex: 0 0 40%;
+    	}
+    }
+    
+    .profile {
+        background: $white;
+        padding: 2rem;
+        p {
+            color: $gray;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .modalClose {
+        float: right;
+        border-radius: 100%;
+        background-color: rgb(165, 165, 165);
+        color: white;
+        border: none;
+    }
+   
+    
+    .no-results {
+        border: 1px solid #e6ecf0;
+        background: $white;
+        text-align: center;
+        padding: 100px 1rem;
+    }
+    .c-modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba($dark, 0.4);
+        z-index: 999;
+
+        .c-container {
+            position: relative;
+            max-width: 600px;
+            margin: 10vh auto 0;
+            padding: 2rem;
+            border-radius: 3px;
+            background: $white;
+            box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+
+            a {
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                padding: 5px;
+            }
+            .button {
+                margin-top: 1rem;
+            }
+            h5 {
+                text-align: center;
+                margin-bottom: 36px;
+            }
+        }
+    }
+}

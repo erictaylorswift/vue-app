@@ -3,19 +3,28 @@
 
 @import url('https://use.fontawesome.com/releases/v5.5.0/css/all.css');
 
+@import url('https://fonts.googleapis.com/css?family=Crimson+Text:400,600');
+
+
 // colors
-$primary: #30A0EE;
-$error: #ef5777;
-$success: #1abc9c;
-$light: #F5F8FA;
-$medium: #657786;
-$dark: #34495E;
-$white: #fff;
+$primary: #328CB3;
+$error: #B84557;
+$success: #48A9A5;
+$light: #E9DDE3;
+$dark: #232B28;
+$white: #FAFAFA;
+$gray: #8A9DA5;
+$pink: #E34EA3;
+
+// fonts 
+$serif: 'Crimson Text', serif;
+$sans: 'Open Sans', sans-serif;
+
 // resets
 body {
 	margin: 0;
 	color: $dark;
-	background: #E6ECF0;
+	background: $white;
 }
 
 html {
@@ -24,7 +33,7 @@ html {
 }
 
 * {
-	font-family: 'Open Sans', sans-serif;
+	font-family: $sans;
 	box-sizing: border-box;
 	transition: 0.15s;
 
@@ -37,12 +46,13 @@ h1,
 h2,
 h3,
 h4,
-h5,
-p {
+h5{
 	margin: 0 0 0.5rem;
+	color: $dark
 }
 
 h1 {
+	font-family: $serif;
 	font-size: 2rem;
 	text-align: center;
 	margin-bottom: 16px;
@@ -66,18 +76,29 @@ h5 {
 
 p {
 	line-height: 1.5;
+	margin: 0 0 0.5rem;
 }
 
 a {
-	font-family: 'Open Sans', sans-serif;
+	font-family: $sans;
 	text-decoration: none;
-	color: $primary;
+	color: $light;
 	margin: 0;
 	padding-right: 8px;
 	cursor: pointer;
+	transition: 0.3s;
 
 	&:hover {
-		color: lighten($primary, 5%);
+		color: lighten($pink, 5%);
+	}
+}
+
+i {
+	color: $light;
+	transition: 0.3s;
+
+	&:hover {
+		color: lighten($pink, 5%);
 	}
 }
 
@@ -108,46 +129,6 @@ section {
 		}
 	}
 }
-.slideout-menu {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 256px;
-    height: 100vh;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    z-index: 0;
-    display: none;
-    background-color: #1D1F20;
-    color: white;
-  }
-
-  .slideout-menu-left {
-    left: 0;
-  }
-
-  .slideout-menu-right {
-    right: 0;
-  }
-
-  .slideout-panel {
-    background-color: #4B5;
-    color: white;
-    position: relative;
-    z-index: 1;
-    will-change: transform;
-    min-height: 100vh;
-  }
-
-  .slideout-open,
-  .slideout-open body,
-  .slideout-open .slideout-panel {
-    overflow: hidden;
-  }
-
-  .slideout-open .slideout-menu {
-    display: block;
-  }
 
 .col1,
 .col2 {
@@ -191,7 +172,7 @@ section {
 }
 
 .button {
-	background: $primary;
+	background: $pink;
 	border: 0;
 	outline: 0;
 	color: $white;
@@ -203,13 +184,13 @@ section {
 	cursor: pointer;
 
 	&:hover {
-		background: lighten($primary, 5%);
+		background: lighten($pink, 5%);
 	}
     &:disabled {
         opacity: 0.5;
 
         &:hover {
-            background: $primary;
+            background: $pink;
         }
     }
 }
@@ -233,10 +214,10 @@ section {
 	float: right;
 
 	li {
-		color: grey;
+		color: $pink;
 
 		a {
-			color: grey;
+			color: $pink;
 			font-size: 18px;
 		}
 	}
@@ -301,7 +282,7 @@ form {
 		font-size: 16px;
 		padding: 10px;
 		outline: 0;
-		border: 1px solid #e6ecf0;
+		border: 1px solid $dark;
 		border-radius: 3px;
 
 		&:focus {
@@ -311,41 +292,11 @@ form {
 
     textarea {
         resize: none;
-        border: 1px solid #e6ecf0;
+        border: 1px solid $gray;
         outline: 0;
-        height: 100px;
-        width: 100%;
+        // height: 100px;
+        width: 80%;
         padding: 10px;
-        font-size: 16px;
+		font-size: 16px;
     }
 }
-// transitions
-.fade-enter-active {
-	transition: opacity 0.5s;
-}
-.fade-leave-active {
-	transition: opacity 0s;
-}
-
-.fade-enter,
-.fade-leave-to {
-	opacity: 0;
-}
-
-.bounce-enter, .bounce-leave-to {
-	opacity: 0;
-}
-
-.bounce-leave, .bounce-enter-to {
-	opacity: 1;
-}
-
-.bounce-enter-active {
-	transition: opacity .5s ease-out
-}
-
-.bounce-leave-active {
-	transition: opacity .5s ease-in
-}
-	
-

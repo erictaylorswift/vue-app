@@ -1,0 +1,121 @@
+.d-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba($dark, 0.4);
+    z-index: 999;
+    width: 100%;
+
+    .d-container {
+        position: fixed;
+        max-width: 600px;
+        top: 2vh;
+        // bottom: 2vh;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        border-radius: 3px;
+        background: $white;
+        box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+        overflow: hidden;
+
+        a {
+            float: right;
+            padding: 0;
+            margin: 10px;
+            opacity: 1;
+
+            i {
+                font-size: 22px;
+                color: $pink;
+            }
+        }
+
+        img {
+            width: 100%;
+        }
+
+        textarea {
+            margin: 16px;
+        }
+
+        button {
+            margin-left: 16px;
+        }
+
+        .detailsWrapper{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 16px;
+            
+            .avatar {
+                width: 10%;
+                border-radius: 100%;
+            }
+        
+            .detailsInfo {
+                margin-left: 16px;
+        
+                h3 {
+                    margin: 0;
+                    font-size: 20px;
+                    color: $pink;
+                }
+                
+                p {
+                    margin: 0;
+                    color: $gray;
+                    font-size: 14px;
+                    line-height: 18px;
+                }
+        
+                .username {
+                    font-weight: bold;
+                    color: $pink;
+                }
+            }
+        
+        }
+
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            padding: 5px;
+        }
+
+        .post {
+
+            &:hover {
+                background: $white;
+            }
+        }
+
+        .comment {
+            font-size: 14px;
+            padding: 1.5rem;
+            border-top: 1px solid #e6ecf0;
+
+            &:first-of-type {
+                border-top: 0;
+            }
+
+            h5 {
+                margin: 0 0 0.5rem;
+            }
+            span {
+                display: block;
+                font-style: italic;
+                font-size: 12px;
+                margin-bottom: 0.5rem;
+                color: darken($light, 20%);
+            }
+            p {
+                margin: 0;
+            }
+        }
+    }
+}

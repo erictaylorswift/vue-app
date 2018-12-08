@@ -41,7 +41,7 @@
         <transition name="fade">
             <div v-if="showCommentModal" class="c-modal">
                 <div class="c-container">
-                    <a @click="closeCommentModal">X</a>
+                    <a @click="closeCommentModal()">X</a>
                     <p>add a comment</p>
                     <form @submit.prevent>
                         <textarea v-model.trim="comment.content"></textarea>
@@ -51,23 +51,50 @@
             </div>
         </transition>
 
+        <transition>
+            <div v-if="showPostDetails" class="d-modal">
+                <div class="d-container">
+                    <a @click="closePostDetails"> <i class="fas fa-times-circle"></i></a>
+                    <div class="detailsWrapper">
+                        <img :src="this.selectedPost.avatar" alt="" class="avatar">
+                        <div class="detailsInfo">
+                            <h3>{{ this.selectedPost.content }}</h3>
+                            <p>by <span class="username">{{ this.selectedPost.name }}</span> created on {{ this.selectedPost.createdOn | dateFilter }}</p>
+                        </div>
+                    </div>
+                    <img :src="this.selectedPost.photo" alt="">
+                    <form @submit.prevent>
+                        <textarea v-model.trim="comment.content" id="commentBox"></textarea>
+                        <button @click="addComment" :disabled="comment.content == ''" class="button">Add comment</button>
+                    </form>
+                </div>
+            </div>
+        </transition>
+
         <!-- <a @click="openPostModal" class="createPostButton">Create Post</a> -->
         <section>
             <div v-if="posts.length" class="postsContainer">
-                <div v-for="post in posts" :key="post.id" class="post" v-if="post.userId === currentUser.uid" >
-                    <div>
-                        <img :src="post.photo" style="width: 100%" >
+                <div v-for="post in posts" :key="post.id" class="post" > 
+                    <!-- v-if="post.userId === currentUser.uid" -->
+                    <div class="postCard">
+                        <div>
+                            <a @click="openPostDetails(post.id)">
+                                <img :src="post.photo" style="width: 100%" >
+                            </a>
+                        </div>
+                        <!-- <p>{{ post.content }}</p> -->
+                        <div class="post-info">
+                            <span>{{ post.createdOn | formatDate }}</span>
+                            
+                            <ul>
+                                <li>comments: {{ post.comments }}</li>
+                                <li>like: {{ post.likes }}</li>
+                            </ul>
+                        </div>
                     </div>
-                        
-                    
-                    <!-- <p>{{ post.content }}</p> -->
-                    <div class="post-info">
-                        <span>{{ post.createdOn | formatDate }}</span>
-                        
-                        <ul>
-                            <li>comments: {{ post.comments }}</li>
-                            <li>like: {{ post.likes }}</li>
-                        </ul>
+                    <div class="userData">
+                        <img class="avatarThumbnail" :src="post.avatar" alt="">
+                        <p>{{ post.userName }}</p>
                     </div>
                 </div>
             </div>
@@ -90,6 +117,17 @@
                     content: '',
                     photoURL: ''
                 },
+                selectedPost: {
+                    photo: '',
+                    content: '',
+                    name: '',
+                    avatar: '',
+                    comments: '',
+                    createdOn: '',
+                    likes: '',
+                    id: '',
+                    comments: 0
+                },
                 comment: {
                     postId: '',
                     userId: '',
@@ -101,16 +139,49 @@
                 // showPostModal: false,
                 selectedFile: null,
                 showError: false,
-                fileGenerated: false
+                fileGenerated: false,
+                showPostDetails: false
                }
         },
         computed: {
             ...mapState(['userProfile', 'currentUser', 'posts', 'showPostModal'])
         },
         methods: {
-            
+            openPostDetails(key) {
+                this.showPostDetails = true;
+                
+                fb.postsCollection.doc(key).get()
+                    .then((doc) =>{
+                        let postData = doc.data()
+                        this.selectedPost.content = postData.content
+                        this.selectedPost.photo = postData.photo
+                        this.selectedPost.name = postData.userName
+                        this.selectedPost.avatar = postData.avatar
+                        this.selectedPost.createdOn = postData.createdOn
+                        this.selectedPost.id = key,
+                        this.selectedPost.comments = postData.comments
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+
+                    fb.commentsCollection.where('postId', '==', key).get()
+                        .then(snapshot => {
+                            if (snapshot.empty) {
+                                console.log('no match docs');
+                                return;
+                            }
+
+                            snapshot.forEach(doc => {
+                                console.log(doc.id, '=>', doc.data())
+                            })
+                        })
+            },
             closePostModal() {
                 this.$store.dispatch('closePostModal')
+            },
+            closePostDetails() {
+                this.showPostDetails = false;
             },
             closeErrorModal() {
                 this.showError = false
@@ -128,20 +199,20 @@
                 this.showCommentModal = false
             },
             addComment() {
-                let postId = this.comment.postId
-                let postComments = this.comment.postComments
+                let postId = this.selectedPost.id
+                let postComments = this.selectedPost.comments
 
                 fb.commentsCollection.add({
                     createdOn: new Date(),
                     content: this.comment.content,
-                    postId: postId,
+                    postId: this.selectedPost.id,
                     userId: this.currentUser.uid,
                     userName: this.userProfile.name
                 }).then(doc => {
                     fb.postsCollection.doc(postId).update({
                         comments: postComments + 1
                     }).then(() => {
-                        this.closeCommentModal()
+                        this.comment.content = ''
                     })
                 }).catch(err => {
                     console.log(err)
@@ -157,6 +228,7 @@
                             content: this.post.content,
                             userId: this.currentUser.uid,
                             userName: this.userProfile.name,
+                            avatar: this.userProfile.avatar,
                             photo: this.post.photoURL,
                             comments: 0,
                             likes: 0
@@ -194,6 +266,11 @@
                     return val
                 }
                 return `${val.substring(0, 200)}...`
+            },
+            dateFilter(val) {
+                if (!val) { return "'??'"}
+                let date = val.toDate()
+                return moment(date).format("MMM Do, YYYY")
             }
         }    
     }

@@ -5,12 +5,15 @@
                     <router-link to='dashboard'><h3>Critiq</h3></router-link>
                     <ul class="inline">
                         
-                        <li><router-link to="dashboard">Dashboard</router-link></li>
+                        <li><router-link to="dashboard">{{ this.userProfile.name }}</router-link></li>
                         <li><router-link to="settings">Settings</router-link></li>
-                        <li><a @click="goToUser()">{{ this.userProfile.name }}</a></li>
+                        <!-- <li><router-link :to="{ name: 'user', query: {user: this.userProfile.name}}">{{ this.userProfile.name }}</router-link></li> -->
                     </ul>
                     <img class="avatarThumbnail" :src="this.userProfile.avatar" alt="">
                     <ul class="inline right">
+                         <li>
+                            <Search/>
+                        </li>
                         <li v-if="['Dashboard'].indexOf($route.name) > -1">
                                 <a @click="openPostModal" v-tooltip.bottom="{ content: 'Upload your art', offset: 12 }">
                                     <i class="fas fa-cloud-upload-alt"></i>
@@ -29,9 +32,11 @@
 
 <script>
     import { mapState } from 'vuex';
+    import Search from './Search'
     const fb = require('../firebaseConfig');
 
     export default {
+        components: { Search },
         data() {
             return {
                 active: false,
@@ -62,11 +67,11 @@
             hideTooltip() {
                 this.active = false
             },
-            goToUser() {
-                const userName = this.userProfile.name;
+            // goToUser() {
+            //     const userName = this.userProfile.name;
 
-                this.$router.replace({name:'user', params:{Name: userName}})
-            }
+            //     this.$router.push({name:'user', params:{Name: userName}})
+            // }
         }    
     }
 </script>

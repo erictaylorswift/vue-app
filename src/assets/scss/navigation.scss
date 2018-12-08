@@ -1,0 +1,51 @@
+// navigation
+header {
+    position: fixed;
+    background: $dark;
+    box-shadow: 0 0 5px 0 rgba($dark, 0.5);
+    z-index: 10;
+    width: 100%;
+    display: inline-block;
+
+    h3 {
+        display: inline-block;
+        color: $light;
+        font-family: $serif;
+    }
+
+    ul {
+        text-align: left;
+        display: inline;
+
+        li {
+            margin-top: 4px;
+            margin-left: 6px;
+            display: inline-block;
+            a {
+                display: inline-block;
+                padding: 5px;
+                opacity: .4;
+                transition: 0.3s;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    section {
+        max-width: 100%;
+    }
+
+    @media screen and (max-width: 742px) {
+        h3 {
+            display: block;
+            text-align: center;
+        }
+        ul {
+            float: none;
+            text-align: center;
+        }
+    }
+}
