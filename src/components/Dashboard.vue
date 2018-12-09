@@ -63,6 +63,9 @@
                         </div>
                     </div>
                     <img :src="this.selectedPost.photo" alt="">
+                    <div v-for="comment in comments" :key="comment.postId">
+                        <p>{{ comment.content }}</p>
+                    </div>
                     <form @submit.prevent>
                         <textarea v-model.trim="comment.content" id="commentBox"></textarea>
                         <button @click="addComment" :disabled="comment.content == ''" class="button">Add comment</button>
@@ -140,7 +143,8 @@
                 selectedFile: null,
                 showError: false,
                 fileGenerated: false,
-                showPostDetails: false
+                showPostDetails: false,
+                comments: [],
                }
         },
         computed: {
@@ -167,13 +171,18 @@
 
                     fb.commentsCollection.where('postId', '==', key).get()
                         .then(snapshot => {
+                            let commentsArray = this.comments;
+
                             if (snapshot.empty) {
                                 console.log('no match docs');
                                 return;
                             }
 
                             snapshot.forEach(doc => {
-                                console.log(doc.id, '=>', doc.data())
+                                // let results = doc.data();
+
+                                commentsArray.push(doc.data());
+
                             })
                         })
             },
@@ -182,6 +191,7 @@
             },
             closePostDetails() {
                 this.showPostDetails = false;
+                this.comments = []
             },
             closeErrorModal() {
                 this.showError = false

@@ -17,6 +17,7 @@ Vue.use(Croppa)
 Vue.use(VTooltip)
 
 let app
+
 fb.auth.onAuthStateChanged(user => {
     if (!app) {
         app = new Vue({
