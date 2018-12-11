@@ -1,10 +1,51 @@
 .create-post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    form {
+        width: 80%;
+    }
+
+    h5 {
+        margin: 22px 0;
+    }
+
     p {
         margin-bottom: 0.5rem;
     }
+
+    label {
+        margin: 32px 0;
+        // font-weight: bold;
+    }
+
+    .post-title-label {
+        margin-top: 44px;
+        font-size: 32px;
+        font-weight: bold;
+    }
+
     textarea {
         height: 74px;
         margin: 22px 0;
+        display: block;
+        width: 100%;
+        padding: 0;
+
+        ::placeholder {
+            vertical-align: bottom;
+            text-align: left;
+        }
+    }
+
+    .post-title {
+        height: 32px;
+        overflow: hidden;
+        border: none;
+        border-bottom: solid $gray 1px;
+        padding-bottom: 16px;
+        margin-bottom: 42px;
     }
     .button {
         margin-top: 1rem;
@@ -13,7 +54,9 @@
         border-radius: 0 0 3px 3px;
     }
     .croppa-container {
-        max-width: 300px;
+        max-width: 450px;
+        // width: 100%;
+        // margin-bottom: 22px;
         margin: 0 auto;
         display: block !important;
     }

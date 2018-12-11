@@ -1,30 +1,30 @@
 <template>
     <div id='dashboard'>
 
-        <transition name="fade">
-            <div v-if="showPostModal" class="c-modal">
-                <div class="c-container">
-                    <a @click="closePostModal">X</a>
-                    <h5>Post your art</h5>
-                    <div class="create-post">
-                        <form @submit.prevent>
-                            <croppa 
-                                v-model="myCroppa"
-                                :width="300"
-                                :height="300"
-                                :placeholder="'Upload your art'"
-                                :accept="'image/*'"
-                                :disable-drag-and-drop="false"
-                                @image-remove="onRemove"
-                                @new-image="onFileSelected"></croppa>
-                            <textarea v-if="fileGenerated" v-model.trim="post.content" placeholder="describe your art here"></textarea>
-                            <button v-if="fileGenerated" @click="createPost" :disabled="post.content === ''" class="button">post</button>
-                            <button v-else @click="uploadCroppedImage" class="button">Crop Image</button>
-                        </form>
-                    </div>
-                </div>
+        <modal name="create-post" height="auto">
+            <div class="create-post">
+                <h5 v-if="!fileGenerated">Post your art</h5>
+                <form @submit.prevent>
+                    <label v-if="fileGenerated" class="post-title-label">Title</label>
+                    <textarea v-if="fileGenerated" v-model.trim="post.title" placeholder="name your art" class="post-title"></textarea>
+                    <croppa 
+                        v-model="myCroppa"
+                        :width="450"
+                        :height="400"
+                        :placeholder="'Upload your art'"
+                        :remove-button-color="'gray'"
+                        :remove-button-size="28"
+                        :accept="'image/*'"
+                        :disable-drag-and-drop="false"
+                        @image-remove="onRemove"
+                        @new-image="onFileSelected"></croppa>
+                    <label v-if="fileGenerated">Describe your art</label>
+                    <textarea v-if="fileGenerated" v-model.trim="post.content" ></textarea>
+                    <button v-if="fileGenerated" @click="createPost" :disabled="post.content === ''" class="modal-button">post</button>
+                    <button v-else @click="uploadCroppedImage" class="modal-button">Crop Image</button>
+                </form>
             </div>
-        </transition>
+        </modal>
 
         <!-- error modal -->
         <transition name="fade">
@@ -37,42 +37,27 @@
             </div>
         </transition>
 
-       <!-- comment modal -->
-        <transition name="fade">
-            <div v-if="showCommentModal" class="c-modal">
-                <div class="c-container">
-                    <a @click="closeCommentModal()">X</a>
-                    <p>add a comment</p>
-                    <form @submit.prevent>
-                        <textarea v-model.trim="comment.content"></textarea>
-                        <button @click="addComment" :disabled="comment.content == ''" class="button">add comment</button>
-                    </form>
-                </div>
-            </div>
-        </transition>
 
-        <transition>
-            <div v-if="showPostDetails" class="d-modal">
-                <div class="d-container">
-                    <a @click="closePostDetails"> <i class="fas fa-times-circle"></i></a>
-                    <div class="detailsWrapper">
-                        <img :src="this.selectedPost.avatar" alt="" class="avatar">
-                        <div class="detailsInfo">
-                            <h3>{{ this.selectedPost.content }}</h3>
-                            <p>by <span class="username">{{ this.selectedPost.name }}</span> created on {{ this.selectedPost.createdOn | dateFilter }}</p>
-                        </div>
-                    </div>
-                    <img :src="this.selectedPost.photo" alt="">
-                    <div v-for="comment in comments" :key="comment.postId">
-                        <p>{{ comment.content }}</p>
-                    </div>
-                    <form @submit.prevent>
-                        <textarea v-model.trim="comment.content" id="commentBox"></textarea>
-                        <button @click="addComment" :disabled="comment.content == ''" class="button">Add comment</button>
-                    </form>
-                </div>
+        <modal name="post-details" height="auto" :scrollable="true" @closed="closed" :maxWidth="800">
+            <h3 class="modal-title">
+                {{ this.selectedPost.content }}
+            </h3>
+            <p class="modal-subtitle">by <span>{{ this.selectedPost.name }}</span> created on {{ this.selectedPost.createdOn | dateFilter }}</p>
+            <img :src="this.selectedPost.photo" alt="" class="modal-img">
+            <div>
+                <h3 class="modal-critiques">Critiques: {{ selectedPost.comments }}</h3>
+                <a class="modal-comment-link" href="#commentBox">Add critique</a>
             </div>
-        </transition>
+             <div v-for="comment in comments" :key="comment.postId">
+                <p class="modal-comments-user">{{ comment.userName }}</p>
+                <p class="modal-comments">{{ comment.content }}</p>
+                <hr class="modal-comments-line">
+            </div>
+            <form @submit.prevent>
+                <textarea v-model.trim="comment.content" id="commentBox"></textarea>
+                <button @click="addComment" :disabled="comment.content == ''" class="button">Add comment</button>
+            </form>
+        </modal>
 
         <!-- <a @click="openPostModal" class="createPostButton">Create Post</a> -->
         <section>
@@ -112,13 +97,16 @@
     import { mapState } from 'vuex';
     import moment from 'moment';
     const fb = require('../firebaseConfig');
+    import PostDetails from './PostDetails'
 
     export default {
+        components: { PostDetails },
         data() {
             return {
                 post: {
                     content: '',
-                    photoURL: ''
+                    photoURL: '',
+                    title: ''
                 },
                 selectedPost: {
                     photo: '',
@@ -151,8 +139,11 @@
             ...mapState(['userProfile', 'currentUser', 'posts', 'showPostModal'])
         },
         methods: {
+            closed() {
+                this.comments = [];
+            },
             openPostDetails(key) {
-                this.showPostDetails = true;
+                // this.showPostDetails = true;
                 
                 fb.postsCollection.doc(key).get()
                     .then((doc) =>{
@@ -184,6 +175,8 @@
                                 commentsArray.push(doc.data());
 
                             })
+                        }).then(() => {
+                            this.$modal.show('post-details')
                         })
             },
             closePostModal() {
@@ -236,6 +229,7 @@
                         fb.postsCollection.add({
                             createdOn: new Date(),
                             content: this.post.content,
+                            title: this.post.title,
                             userId: this.currentUser.uid,
                             userName: this.userProfile.name,
                             avatar: this.userProfile.avatar,

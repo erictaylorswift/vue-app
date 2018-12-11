@@ -1,0 +1,78 @@
+.v--modal-box {
+    top: 32px !important;
+}
+
+.modal-title {
+    margin: 24px 0 0 24px;
+    font-size: 22px;
+    color: $pink;
+}
+
+.modal-subtitle {
+    margin: 0 0 24px 24px;
+    color: $gray;
+
+    span {
+        font-weight: bold;
+        color: $pink;
+    }
+}
+
+
+.modal-img {
+    width: 100%;
+}
+
+.modal-critiques {
+    margin: 16px 0 8px 16px;
+}
+
+.modal-comment-link {
+    margin: 16px 0 16px 16px;
+}
+
+.modal-comments-user {
+    font-weight: bold;
+    margin-left: 16px;
+}
+
+.modal-comments {
+    margin-left: 16px;
+    font-size: 14px;
+    opacity: .6;
+
+}
+
+.modal-comments-line {
+    margin-left: 16px;
+    width: 75%;
+    opacity: .3;
+}
+
+.modal-button {
+    width: 100%;
+    align-self: center;
+    display: block;
+    background: $pink;
+	border: 0;
+	outline: 0;
+	color: $white;
+	padding: 0.8rem 1rem;
+    // margin: 0 auto;
+    margin: 34px 0;
+	font-size: 16px;
+	border-radius: 3px;
+	cursor: pointer;
+
+	&:hover {
+		background: lighten($pink, 5%);
+	}
+    &:disabled {
+        opacity: 0.5;
+
+        &:hover {
+            background: $pink;
+        }
+    }
+}
+

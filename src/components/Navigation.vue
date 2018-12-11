@@ -59,7 +59,7 @@
                 })
             },
             openPostModal() {
-                this.$store.dispatch('postModal')
+                this.$modal.show('create-post')
             },
             showTooltip() {
                 this.active = !this.active
